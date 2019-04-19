@@ -50,72 +50,77 @@ class totalPers:
 
     def split(self):
         self.time +=1
-        if self.time == 1:
-            self.grps = [groupe(self.screen, nbVelo), groupe(self.screen,self.nbPers-nbVelo)]
-            self.grps[0].setPos((origin[0]+(1/vVelo)*sizePart, origin[1] - sizePart))
-            self.grps[1].setPos((origin[0]+sizePart, origin[1] - sizePart))
-            self.refresh()
-        elif self.time<nbPersonne:
-            #gere l'axe de gauche
-            grpProv = self.grps
-            if self.time < nbVelo+1:
-                first = grpProv[0].getNb() - 1
-            else:
-                first =  grpProv[0].getNb() + 1
-            self.grps = [groupe(self.screen, first)]
-            if self.time< nbVelo+1 and self.time < nbPersonne-nbVelo+1:
-                i=0
-                while i < self.time-1:
-                    self.grps.append(groupe(self.screen, 2))
-                    i+=1
-            elif self.time >= nbVelo and self.time <= nbPersonne-nbVelo:
-                i=0
-                while i < nbVelo-1:
-                    self.grps.append(groupe(self.screen, 2))
-                    i+=1
-            elif self.time <= nbVelo and self.time >= nbPersonne-nbVelo:
-                i=0
-                while i < nbVelo-nbPersonne/2:
-                    self.grps.append(groupe(self.screen, 2))
-                    i+=1
-            elif self.time > nbVelo and self.time > nbPersonne-nbVelo:
-                i=0
-                self.timeDepasse+=1
-                if nbVelo > nbPersonne/2:
-                    while i < nbPersonne-nbVelo-self.timeDepasse:
+        if nbVelo == nbPersonne:
+            self.grps = [groupe(self.screen,nbPersonne)]
+            self.grps[0].setPos((origin[0]+self.time*(1/vVelo)*sizePart, origin[1] - self.time*sizePart))
+        else:
+            if self.time == 1:
+                self.grps = [groupe(self.screen, nbVelo), groupe(self.screen,self.nbPers-nbVelo)]
+                self.grps[0].setPos((origin[0]+(1/vVelo)*sizePart, origin[1] - sizePart))
+                self.grps[1].setPos((origin[0]+sizePart, origin[1] - sizePart))
+                self.refresh()
+            elif self.time<nbPersonne:
+                #gere l'axe de gauche
+                grpProv = self.grps
+                if self.time < nbVelo+1:
+                    first = grpProv[0].getNb() - 1
+                else:
+                    first =  grpProv[0].getNb() + 1
+                self.grps = [groupe(self.screen, first)]
+                if self.time< nbVelo+1 and self.time < nbPersonne-nbVelo+1:
+                    i=0
+                    while i < self.time-1:
                         self.grps.append(groupe(self.screen, 2))
                         i+=1
-                if nbVelo < nbPersonne/2:
-                    while i < nbVelo-self.timeDepasse:
+                elif self.time >= nbVelo and self.time <= nbPersonne-nbVelo:
+                    i=0
+                    while i < nbVelo-1:
                         self.grps.append(groupe(self.screen, 2))
                         i+=1
+                elif self.time <= nbVelo and self.time >= nbPersonne-nbVelo:
+                    i=0
+                    while i < nbPersonne-nbVelo-1:
+                        self.grps.append(groupe(self.screen, 2))
+                        i+=1
+                elif self.time > nbVelo and self.time > nbPersonne-nbVelo:
+                    i=0
+                    self.timeDepasse+=1
+                    if nbVelo > nbPersonne/2:
+                        while i < nbPersonne-nbVelo-self.timeDepasse:
+                            self.grps.append(groupe(self.screen, 2))
+                            i+=1
+                    if nbVelo <= nbPersonne/2:
+                        while i < nbVelo-self.timeDepasse:
+                            self.grps.append(groupe(self.screen, 2))
+                            i+=1
 
 
-            #gere l'axe de droite
-            if self.time < nbPersonne-nbVelo+1:
-                last = grpProv[len(grpProv)-1].getNb() - 1
-            else:
-                last =  grpProv[len(grpProv)-1].getNb() + 1
-            self.grps.append(groupe(self.screen, last))
-            #definir les positions
-            if self.time < nbVelo+1:
-                posGauche = self.grps[0].getPos()
-                self.grps[0].setPos((origin[0]+self.time*(1/vVelo)*sizePart, origin[1] - self.time*sizePart))
-                posGauche = self.grps[0].getPos()
-            else:
-                posGauche = self.grps[0].getPos()
+
+                #gere l'axe de droite
+                if self.time < nbPersonne-nbVelo+1:
+                    last = grpProv[len(grpProv)-1].getNb() - 1
+                else:
+                    last =  grpProv[len(grpProv)-1].getNb() + 1
+                self.grps.append(groupe(self.screen, last))
+                #definir les positions
+                if self.time < nbVelo+1:
+                    posGauche = self.grps[0].getPos()
+                    self.grps[0].setPos((origin[0]+self.time*(1/vVelo)*sizePart, origin[1] - self.time*sizePart))
+                    posGauche = self.grps[0].getPos()
+                else:
+                    posGauche = self.grps[0].getPos()
+                    self.grps[0].setPos((origin[0]+(self.time-nbVelo)*sizePart+(1/vVelo)*sizePart*nbVelo, origin[1] - self.time*sizePart))
+                    posGauche = self.grps[0].getPos()
+
+                i=1
+                print(posGauche)
+                while i < len(self.grps):
+                    self.grps[i].setPos((posGauche[0]+i*dist2PtAdj, posGauche[1]))
+                    i+=1
+            elif self.time == nbPersonne:
+                print(self.time)
+                self.grps = [groupe(self.screen, self.time)]
                 self.grps[0].setPos((origin[0]+(self.time-nbVelo)*sizePart+(1/vVelo)*sizePart*nbVelo, origin[1] - self.time*sizePart))
-                posGauche = self.grps[0].getPos()
-
-            i=1
-            print(posGauche)
-            while i < len(self.grps):
-                self.grps[i].setPos((posGauche[0]+i*dist2PtAdj, posGauche[1]))
-                i+=1
-        elif self.time == nbPersonne:
-            print(self.time)
-            self.grps = [groupe(self.screen, self.time)]
-            self.grps[0].setPos((origin[0]+(self.time-nbVelo)*sizePart+(1/vVelo)*sizePart*nbVelo, origin[1] - self.time*sizePart))
 
         self.refresh()
 
